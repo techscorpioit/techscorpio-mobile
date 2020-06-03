@@ -135,8 +135,8 @@ class TechScorpio_Mobile_Controller extends WP_REST_Controller {
 		
 		global $wpdb;
 		$table_name = '_ts_paid_content';
-		$subs_table_name = $wpdb->prefix.'_posts';
-		//$subs_id = $request['plan_id'];		
+		$subs_table_name = $wpdb->prefix.'posts';
+		$subs_id = $request['plan_id'];		
 
 		$free_content = $wpdb->get_results( 
 			"SELECT $table_name.paid_content_id,
@@ -148,7 +148,8 @@ class TechScorpio_Mobile_Controller extends WP_REST_Controller {
 			INNER JOIN $subs_table_name 
 			ON LEFT($table_name.paid_content_subs_plan_name, LOCATE(' ',$table_name.paid_content_subs_plan_name) - 1) 
 			= $subs_table_name.id
-			WHERE $subs_table_name.post_type = 'pms-subscription'"
+			WHERE $subs_table_name.post_type = 'pms-subscription'
+			AND LEFT($table_name.paid_content_subs_plan_name, LOCATE(' ',$table_name.paid_content_subs_plan_name) - 1) = $subs_id"
 		);
 
 		if (empty($free_content)) {
